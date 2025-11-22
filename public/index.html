@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Secure Login</title>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap');
+
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        font-family: "Poppins", sans-serif;
+        background: url("https://i.imgur.com/NgvmINA.jpeg") no-repeat center center / cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 0;
+    }
+
+    .login-box {
+        position: relative;
+        z-index: 10;
+        width: 360px;
+        padding: 32px;
+        background: rgba(20, 20, 20, 0.82);
+        border-radius: 14px;
+        box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(6px);
+    }
+
+    .ig-logo {
+        font-family: 'Grand Hotel', cursive;
+        font-size: 52px;
+        color: white;
+        text-align: center;
+        margin-bottom: 10px;
+        user-select: none;
+    }
+
+    .login-box p.time {
+        margin: 0 0 20px;
+        color: #cfcfcf;
+        font-size: 13px;
+        text-align: center;
+        letter-spacing: 0.5px;
+    }
+
+    .input-group {
+        margin-bottom: 16px;
+        width: 100%;
+    }
+
+    .input-group label {
+        color: #eaeaea;
+        font-size: 14px;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background: #111;
+        color: white;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .captcha-box {
+        margin-top: 18px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 14px;
+        margin-top: 8px;
+        background: linear-gradient(90deg, #ff7a00, #ff0069);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.25s ease;
+    }
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+
+    .status {
+        text-align: center;
+        color: #ff8383;
+        margin-top: 14px;
+        font-size: 14px;
+        display: none;
+    }
+</style>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<div class="login-box">
+
+    <div class="ig-logo">Hello Baby</div>
+
+    <p class="time" id="time"></p>
+
+    <div class="input-group">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Enter username">
+    </div>
+
+    <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter password">
+    </div>
+
+    <div class="captcha-box">
+        <div class="g-recaptcha" data-sitekey="6LeDshQsAAAAANsUGcwnhE7va0q7RBRD0kSuWy8z"></div>
+    </div>
+
+    <button class="btn" onclick="login()">Sign In</button>
+
+    <div class="status" id="status"></div>
+</div>
+
+<script>
+function updateTime() {
+    const t = new Date();
+    document.getElementById("time").innerText =
+        t.toLocaleDateString() + " • " + t.toLocaleTimeString();
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+async function login() {
+    const status = document.getElementById("status");
+    status.style.display = "block";
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const token = grecaptcha.getResponse();
+
+    if (!token) {
+        status.innerText = "Please complete reCAPTCHA.";
+        return;
+    }
+
+    const verify = await fetch("/vina/vins", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token })
+    });
+
+    const result = await verify.json();
+    if (!result.success) {
+        status.innerText = "Captcha verification failed.";
+        grecaptcha.reset();
+        return;
+    }
+
+    // your login
+    if (username === "vin@16" && password === "vina16") {
+        status.style.color = "#7CFC98";
+        status.innerText = "Login successful…";
+        setTimeout(() => {
+            window.location.href = "https://share.google/yTSrMcxjxdGnmZ5rh";
+        }, 1200);
+    } else {
+        status.style.color = "#ff7b7b";
+        status.innerText = "Invalid username or password.";
+    }
+}
+</script>
+
+</body>
+</html>
