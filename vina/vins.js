@@ -8,7 +8,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: "No token provided" });
     }
 
-    const secretKey = "YOUR_SECRET_KEY_HERE";
+    const secretKey = "6LdO7BQsAAAAAJZrdW-ef5VT2_EJGOdlFhHzENsF";
 
     const googleVerifyURL =
         `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
