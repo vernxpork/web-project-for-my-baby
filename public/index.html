@@ -113,7 +113,6 @@
 </style>
 
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
 </head>
 
 <body>
@@ -137,7 +136,7 @@
     </div>
 
     <div class="captcha-box">
-        <div class="g-recaptcha" data-sitekey="6Lcm6RQsAAAAAP_sM6ol6tocoPvWhG8EN58MrtCY"></div>
+        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
     </div>
 
     <button class="btn" onclick="login()">Sign In</button>
@@ -158,39 +157,31 @@ async function login() {
     const status = document.getElementById("status");
     status.style.display = "block";
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
     const token = grecaptcha.getResponse();
-
     if (!token) {
         status.innerText = "Please complete reCAPTCHA.";
         return;
     }
 
-    const verify = await fetch("/vina/vins", {
+    const verify = await fetch("/api/vins", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token })
     });
 
     const result = await verify.json();
+
     if (!result.success) {
         status.innerText = "Captcha verification failed.";
         grecaptcha.reset();
         return;
     }
 
-    // your login
-    if (username === "vin@16" && password === "vina16") {
-        status.style.color = "#7CFC98";
-        status.innerText = "Login successful…";
-        setTimeout(() => {
-            window.location.href = "https://share.google/yTSrMcxjxdGnmZ5rh";
-        }, 1200);
-    } else {
-        status.style.color = "#ff7b7b";
-        status.innerText = "Invalid username or password.";
-    }
+    status.style.color = "#79ff9f";
+    status.innerText = "Captcha passed! Logging in...";
+
+    // Here you can redirect or login
+    // window.location.href = "/dashboard.html";
 }
 </script>
 
