@@ -167,6 +167,7 @@ async function login() {
         return;
     }
 
+    // VERIFY CAPTCHA (existing logic)
     const verify = await fetch("/vina/vins", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -174,23 +175,29 @@ async function login() {
     });
 
     const result = await verify.json();
+
     if (!result.success) {
         status.innerText = "Captcha verification failed.";
         grecaptcha.reset();
         return;
     }
 
-    // your login
-    if (username === "vin@16" && password === "vina16") {
-        status.style.color = "#7CFC98";
-        status.innerText = "Login successful…";
+    // -------------------------
+    // ✅ ADDED LOGIN CHECK HERE
+    // -------------------------
+    if (username === "baby" && password === "love") {
+        status.style.color = "#79ff9f";
+        status.innerText = "Success! Redirecting...";
+
         setTimeout(() => {
-            window.location.href = "https://share.google/yTSrMcxjxdGnmZ5rh";
-        }, 1200);
-    } else {
-        status.style.color = "#ff7b7b";
-        status.innerText = "Invalid username or password.";
+            window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+        }, 1000);
+
+        return;
     }
+
+    // If wrong credentials
+    status.innerText = "Invalid username or password.";
 }
 </script>
 
